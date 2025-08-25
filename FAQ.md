@@ -1,65 +1,61 @@
 1 Feature engineering.
 
-### **1. Technical Tone**
+---
 
-* Added **`avg_flight_duration_hours`** to model workload intensity beyond flight counts, capturing variability in operational complexity.
-* Engineered **`departure_duration_interaction`** (flights × duration) to represent **total daily flight hours**, a stronger predictor of crew demand.
-* These features improved model accuracy and feature importance, helping better predict **standby crew requirements** in dynamic schedules.
+### **1. Flight Duration Features**
+
+**avg\_flight\_duration\_hours**
+
+* **Logic:** Longer flights increase crew fatigue and workload, beyond just counting the number of flights.
+* **Why it matters:** Captures variability in operational complexity and potential demand for standby crew.
+* **Example benefit:** Days with fewer but longer flights may require more standby crew than days with many short flights.
+
+**departure\_duration\_interaction**
+
+* **Logic:** Combines daily flight count × average flight duration to estimate total daily flight hours.
+* **Why it matters:** Provides a stronger signal of actual crew workload than flight count alone.
+* **Example benefit:** Helps predict high-demand days more accurately, improving staffing allocation.
 
 ---
 
-### **2. Business/Operational Tone**
+### **2. Cyclical Encoding (day\_sin, day\_cos, week\_sin, week\_cos)**
 
-* Introduced **flight duration-based features** to account for the **higher crew demand and fatigue risk** associated with longer flights.
-* Created a **total daily flight hours metric** to align predictions with real operational workload.
-* Enabled **more accurate staffing forecasts**, supporting **better crew planning and reduced operational disruptions**.
-
-
-
-
-Here’s a **clear and interview-ready explanation** of the other engineered features in your code and **how they add value**:
+* **Logic:** Days and weeks repeat in cycles; numeric representation alone can mislead the model.
+* **Why it matters:** Preserves periodicity, allowing the model to detect patterns like weekends or holiday weeks.
+* **Example benefit:** Model learns that standby demand spikes on weekends or during certain weeks of the year.
 
 ---
 
-### **1. Cyclical Encoding (`day_sin`, `day_cos`, `week_sin`, `week_cos`)**
+### **3. Rolling Statistics (rolling\_absence\_7d, rolling\_standby\_7d)**
 
-* **Why:** Days and weeks are cyclical — Monday follows Sunday, Week 1 follows Week 52.
-* **Benefit:** Prevents the model from misinterpreting the numerical order of days/weeks and helps detect **seasonal patterns**, like weekend crew shortages or busy weekly cycles.
-
----
-
-### **2. Rolling Statistics (`rolling_absence_7d`, `rolling_standby_7d`)**
-
-* **Why:** Short-term trends affect demand — if absences have been high for a week, standby needs likely increase.
-* **Benefit:** Captures **recent moving averages** for absence rates and standby usage, helping the model adjust to **short-term shifts or anomalies**.
+* **Logic:** Short-term averages show recent trends and smooth out daily noise.
+* **Why it matters:** Reflects ongoing changes in absences or standby usage, helping predict upcoming demand.
+* **Example benefit:** Detects increasing absence rates over a week, allowing proactive adjustment of standby crew.
 
 ---
 
-### **3. Lag Features (`standby_lag_1d`, `standby_lag_7d`)**
+### **4. Lag Features (standby\_lag\_1d, standby\_lag\_7d)**
 
-* **Why:** Yesterday’s or last week’s standby need often predicts today’s need due to operational continuity.
-* **Benefit:** Improves **time-series forecasting** by giving the model temporal context of recent demands.
-
----
-
-### **4. Missing Data Indicator (`weather_missing_flag`)**
-
-* **Why:** Missing weather data might signal **data issues** or unusual conditions.
-* **Benefit:** Allows the model to **use missingness as a signal** rather than losing data, improving robustness.
+* **Logic:** Past demand often influences future demand; yesterday’s or last week’s numbers carry predictive value.
+* **Why it matters:** Provides temporal context to the model for time-series forecasting.
+* **Example benefit:** Helps the model anticipate patterns like recurring weekday demand spikes.
 
 ---
 
-### **5. Experience-Weighted Crew (`experience_weighted_crew`)**
+### **5. Missing Data Indicator (weather\_missing\_flag)**
 
-* **Why:** More experienced crews handle schedules more efficiently, reducing standby demand.
-* **Benefit:** Helps the model differentiate between **quantity of crew** and **quality of experience**, improving staffing predictions.
+* **Logic:** Missing weather data can signal unusual operational conditions or data issues.
+* **Why it matters:** Treats missingness as a potential signal instead of losing information.
+* **Example benefit:** Model accounts for disruption risks when weather data is unavailable, improving robustness.
 
 ---
 
-### **How to summarize in interviews**
+### **6. Experience-Weighted Crew (experience\_weighted\_crew)**
 
-You could say:
+* **Logic:** Not all crew members have the same productivity — experienced staff handle complex routes better.
+* **Why it matters:** Captures quality of crew, not just quantity.
+* **Example benefit:** Days with fewer but highly experienced crew might need less standby support.
 
-> “I engineered features like **cyclical encodings** for seasonal patterns, **rolling averages and lags** to capture recent trends, **missing-data flags** for robustness, and **experience-weighted crew metrics** to factor in skill levels. These features helped the model better align predictions with operational realities and improved forecast accuracy.”
+---
 
-Would you like me to show you how to quickly **measure the importance** of each of these features using a model, so you can talk about performance impact in your interview?
+If you want, I can also **combine all these into a single 1-page memory map** with **keywords and categories** so you can recall everything instantly in an interview. This works really well for quick mental retrieval. Do you want me to do that?
