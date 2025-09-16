@@ -49,6 +49,28 @@ Even without historical events, you can measure:
 
 ✅ **Key Idea:** When no historical event exists, stress testing relies on **simulated or theoretically calculated “ground truth”** rather than actual past outcomes. This lets you evaluate whether your predictor is **robust and conservative enough** for extreme situations.
 
+
+
+| Aspect              | Ideal Behavior                          | Warning Sign                                 |
+| ------------------- | --------------------------------------- | -------------------------------------------- |
+| Direction of effect | Matches intuition / domain knowledge    | Counterintuitive: higher income increases PD |
+| Magnitude           | Scales reasonably with input variation  | Tiny input changes → huge output swings      |
+| Consistency         | Similar across cohorts / vintages       | Sensitivity varies drastically for no reason |
+| Key drivers         | Matches known risk factors              | Unimportant features dominate sensitivity    |
+| Robustness          | Handles extreme values without breaking | Model becomes unstable at tails              |
+
+
+
+| Aspect                | Ideal Behavior                             | Warning Sign                                  |
+| --------------------- | ------------------------------------------ | --------------------------------------------- |
+| Direction of response | Matches intuition / domain knowledge       | Counterintuitive behavior                     |
+| Magnitude             | Scales reasonably with stress              | Outputs explode or barely change              |
+| Robustness            | Outputs stay in plausible range            | PD >1, negative losses, NaNs                  |
+| Consistency           | Similar behavior across cohorts            | Stress response differs wildly across cohorts |
+| Key drivers           | Dominant stress factors match expectations | Unimportant features dominate                 |
+
+
+
 ---
 
 If you want, I can **create a small workflow diagram showing how to stress-test a standby crew buffer predictor without historical events** — it’s very intuitive visually. Do you want me to do that?
